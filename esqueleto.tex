@@ -1,0 +1,70 @@
+\documentclass{article}
+\input{Algo1Macros}
+
+\begin{document}
+
+\section{Ejercicio 1}
+
+\pred{esValido}{t : toroide}{\\
+	(|t| \geq 3) \land \\
+	(\forall i : \ent)(((0 \leq i < |t|) \implicaLuego (|t[i]| \leq 3)) \yLuego (|t[i]| = |t[0]|))
+	\\ }
+
+\section{Ejercicio 2}
+
+\pred{toroideMuerto}{t : toroide}{\\
+	(\forall i : \ent)((0 \leq i < |t|) \implicaLuego (\forall j : \ent) ((0 \leq j < |t[i]|) \implicaLuego (t[i][j] = False)))
+	\\ }
+
+\section{Ejercicio 3}
+
+\pred{posicionesVivas}{t : toroide, vivas : \TLista{\ent \times \ent}}{\\ 
+	(\forall i : \ent)((0 \leq i < |vivas|) \implicaLuego t[vivas[i]_0][vivas[i]_1]) \land \\
+	(\forall j : \ent)((0 \leq j < |t|) \implicaLuego ((\forall k : \ent)((0 \leq k < |t[j]) \implicaLuego \\
+	(t[j][k] \implica (j,k) \in vivas))))
+	\\}
+
+\section{Ejercicio 4}
+
+\subsection{Función principal}
+\aux{densidadPoblacion}{t : toroide}{\float}{\\
+	cantidadVivos(t) / cantidadPoblacion(t)}
+
+\subsection{Funciones auxiliares}
+\aux{cantidadVivos}{t : toroide}{\float}{\\
+	\sum_{i=0}^{|t|-1}
+	\sum_{j=0}^{|t[i]|-1}
+	\IfThenElse{t[i][j]}{1}{0}}
+
+\aux{cantidadPoblacion}{t:toroide}{\float}{\\ |t| \cdot |t[0]|}
+
+\section{Ejercicio 5}
+
+\subsection{Función principal}
+\aux{cantVecinosVivos}{t : toroide, f : \ent , c : \ent}{\ent}{\\
+	\sum_{i=0}^{|t|-1}
+	\sum_{j=0}^{|t[i]|-1}
+	\IfThenElse{t[i][j] \land esVecino(t,i,j,f,c)}{1}{0}}
+
+\subsection{Funciones auxiliares}
+\aux{esVecino}{t : toroide, i,j,f,c : \ent}{\bool}{\\
+	(i = (f+1 \ mod \ |t|) \lor i = (f-1 \ mod \ |t|)) \land \\
+	(j = (c+1 \ mod \ |t[0]|) \lor j = (c-1 \ mod \ |t[0]|))}
+
+\section{Ejercicio 6}
+
+\pred{evolucionDePosiciones}{t : toroide, posicion : $\ent \times \ent$}{\\
+	\IfThenElse{t[(posicion)_0][(posicion)_1] \\}
+	{2 \leq cantVecinosVivos(t, i, j) \leq 3\\}
+	{cantVecinosVivos(t, i, j) = 3}
+	\\}
+
+\section{Ejercicio 7}
+
+\pred{evolucionToroide}{t1 : toroide, t2 : toroide}{\\
+	(|t1| = |t1|) \land (|t1[0]| = |t1[0]|) \land \\
+	(\forall i : \ent)((0 \leq i < |t1|) \implicaLuego \\
+	(\forall j : \ent)((0 \leq j < |t1[i]) \implicaLuego (t2[i][j] = evolucionDePosicion(t1, (i, j)))))
+	\\}
+
+\end{document}
