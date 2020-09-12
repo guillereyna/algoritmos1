@@ -55,8 +55,8 @@
 
 \pred{evolucionDePosiciones}{t : toroide, posicion : $\ent \times \ent$}{\\
 	\IfThenElse{t[(posicion)_0][(posicion)_1] \\}
-	{2 \leq cantVecinosVivos(t, i, j) \leq 3\\}
-	{cantVecinosVivos(t, i, j) = 3}
+	{2 \leq cantVecinosVivos(t, (posicion)_0, (posicion)_1) \leq 3\\}
+	{cantVecinosVivos(t, (posicion)_0, (posicion)_1) = 3}
 	\\}
 
 \section{Ejercicio 7}
