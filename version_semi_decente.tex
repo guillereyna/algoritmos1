@@ -1,0 +1,121 @@
+\documentclass[a4paper]{article}
+\input{Algo1Macros}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath, amscd, amssymb, amsthm, latexsym}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{enumerate}
+\usepackage{parskip}
+
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+\newcommand{\toroide}{Toroide}
+
+\setlength{\parindent}{2em} %espaciado horizontal
+\setlength{\parskip}{0.5em} %espaciado vertical
+
+
+\begin{document}
+
+\titulo{TP de Especificación}
+\fecha{\today}
+\materia{Algoritmos y Estructuras de Datos I}
+\grupo{Grupo  3}
+
+% CAMBIAR INTEGRANTES
+\integrante{Fernandez Spandau, Luciana}{368/20}{fernandezspandau@gmail.com}
+\integrante{Reyna Maciel, Guillermo}{393/20}{guille.j.reyna@gmail.com}
+\integrante{Casado Farral, Joaquín}{072/20}{joakinfarral@gmail.com}
+\integrante{Companeetz, Ezequiel}{415/20}{echucompa@gmail.com}
+
+\maketitle
+
+
+\section{Ejercicios - Primera Parte}
+
+
+\subsection{Ejercicio 1}
+
+Predicados extra: 
+
+\pred{esMatriz}{t : \toroide}{ \\
+	 ( \forall i : $\TLista{$ \bool $}$  ) \ ( i \in t \Rightarrow_L |t[0]| == |i| ) \ \\
+ }
+
+
+Solución:
+
+\pred{esValido}{t : \toroide} { \\
+	  esMatriz(t  ) \ \land \ |t[0]| \leq 3 \land \ |t| \leq 3 \\
+ } 
+
+\subsection{Ejercicio 2}
+
+Solución:
+
+\pred{toroideMuerto}{ t : \toroide}{ \\
+	( \forall i : \ent ) \ ( 0 \leq i < |t| \Rightarrow_L \ (\forall j : \ent ) \ ( 0 \leq j < |t[i]| \rightarrow_L t[i][j] == \False ) \ )  \\
+}
+
+Funciones auxiliares: 
+
+\aux{fila}{coordenadas : \tuple{\ent}{\ent}}{\ent}{(coordenadas)_1 } 
+\aux{colu}{coordenadas : \tuple{\ent}{\ent}}{\ent}{(coordenadas)_2 }
+
+Solución:
+
+\pred{posicionesVivas}{t :\toroide, vivas : \TLista{\tuple{\ent}{\ent}}}{\\
+	( \sum_{i=0}^{|vivas| -1 } \IfThenElse{ t[fila(vivas[i])] [colu(vivas[i])] == \True}{0}{1} )  == \  0 \\
+}
+
+
+\subsection{Ejercicio 4}
+
+Funciones auxiliares: 
+
+\aux{cantidadVivos}{t: \toroide}{\ent}{\sum_{i=0}^{|t|-1} ( \sum_{j=0}^{|t[i]| -1 } \IfThenElse{t[i][j] == \True}{1}{0} )}
+
+Solución:
+
+\aux{densidadPoblación}{t: \toroide }{\float}{cantidadVivos(t) / ( |t|*|t[0]|) }
+
+\subsection{Ejercicio 5}
+
+Funciones auxiliares + Predicados extra: 
+
+\aux{abs}{n : \float}{\float}{ \IfThenElse{n<0}{ -n}{n}}  
+\aux{distancia}{$x_1$ : \ent, $x_2$ : \ent, rango: \ent}{\float}{abs (x_1- x_2) \ mod \  rango}
+/*Siendo rango la variable para tener en cuenta los vecinos de los bordes*/
+
+\pred{sonVecinos}{x,y : \ent , $v_1, v_2$ : \ent, t : \toroide}{\\
+coord \neq veci \ \land \ distancia(x, v_1, |t|) , \ distancia(y, v_2, |t[0]|) \leq 1 \\
+} /*Siendo (x,y) las coordenadas de la posición a evaluar y $(v_1, v_2)$ las del vecino */
+ 
+Solución:
+\aux{cantVecinosVivos}{t : \toroide, f : \ent , c : \ent}{\ent}{\\
+	\sum_{i=0}^{|t|-1} ( \sum_{j=0}^{|t[i]| -1 } \IfThenElse{ ( \ t[i][j] == \True \land sonVecinos(i,j,f,c,t)}{1}{0} \ )
+}
+
+
+\subsection{Ejercicio 6}
+
+Solución:
+
+\pred{evoluciónDePosición}{t: \toroide, posicion : \tuple{\ent}{\ent}}{ \\
+ (\ ( \ t[fila(posicion)] [colu(posicion)] == \True ) \ \land \ ( 2 \leq cantVecinosVivos(t, fila(posicion), colu(posicion) ) \leq 3)\ )  \ \lor \ 
+ ( \ (t[fila(posicion)] [colu(posicion)] == \False) \ \land \ 
+ (cantVecinosVivos(t, fila(posicion), colu(posicion) ) == 3  ) \ ) \\
+}
+
+\subsection{Ejercicio 7}
+Solución:
+
+\pred{evoluciónToroide}{$t_1$ : \toroide , $t_2$ : \toroide}{ 	
+\sum_{i=0}^{|t|-1} ( \ \sum_{j=0}^{|t[i]| -1 } \ \IfThenElse{ t_2[i][j] == \True
+ \Leftrightarrow evolucionDePosici$ó$n(t_1, (i, j) )}{0}{1}  ) == 0 }
+
+\section{Decisiones tomadas}
+Falta completar :)
+% Sólo para decisiones de alto nivel, no para explicar la solución a los ejercicios: CONSULTAR!
+
+\end{document}
