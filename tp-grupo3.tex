@@ -48,8 +48,9 @@ MATRIZ LULI
 
 \section{Ejercicio 3}
 
-PRED LULI \\
-CHEQUEAR RANGO
+\pred{posicionesVivas}{t: \toroide, vivas: \Tlista{\ent \times \ent}}{\\
+(\forall i : \ent)((\forall j : \ent)((0 \leq i < \longitud{t} \yLuego 0 \leq j < \longitud{t[i]} \yLuego (i,j) \in vivas) \Iff_L t[i][j] = \True))\\
+}
 
 \section{Ejercicio 4}
 
@@ -90,7 +91,11 @@ CHEQUEAR RANGO
 
 \section{Ejercicio 7}
 
-COSO LULI
+\pred{evolucionToroide}{t1: \toroide, t2: \toroide}{\\
+(\longitud{t1} = \longitud{t2} \wedge \longitud{t1[0]} = \longitud{t2[0]}) \yLuego \\
+(\forall i : \ent)((\forall j : \ent)((0 \leq i < \longitud{t1} \yLuego 0 \leq j < \longitud{t1[i]}) \implicaLuego \\
+evolucionDePosicion(t1, (i,j)) = \True \Iff t2[i][j] = \True\\
+}
 
 \section{Decisiones tomadas}
 Asumimos en cada ejercicio que el toroide pasado es un toroide válido para simplificar la escritura.
