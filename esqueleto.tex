@@ -19,7 +19,7 @@
 \section{Ejercicio 3}
 
 \pred{posicionesVivas}{t : toroide, vivas : \TLista{\ent \times \ent}}{\\ 
-	(\forall i : \ent)((0 \leq i < |vivas|) \implicaLuego t[vivas[i]_0][vivas[i]_1]) \land \\
+	(\forall i : \ent)((0 \leq i < |vivas|) \implicaLuego (t[vivas[i]_0][vivas[i]_1]) = \True) \land \\
 	(\forall j : \ent)((0 \leq j < |t|) \implicaLuego ((\forall k : \ent)((0 \leq k < |t[j]) \implicaLuego \\
 	(t[j][k] \implica (j,k) \in vivas))))
 	\\}
@@ -44,7 +44,7 @@
 \aux{cantVecinosVivos}{t : toroide, f : \ent , c : \ent}{\ent}{\\
 	\sum_{i=0}^{|t|-1}
 	\sum_{j=0}^{|t[i]|-1}
-	\IfThenElse{t[i][j] \land esVecino(t,i,j,f,c)}{1}{0}}
+	\IfThenElse{(t[i][j] = \True) \land esVecino(t,i,j,f,c)}{1}{0}}
 
 \subsection{Funciones auxiliares}
 \aux{esVecino}{t : toroide, i,j,f,c : \ent}{\bool}{\\
@@ -54,7 +54,7 @@
 \section{Ejercicio 6}
 
 \pred{evolucionDePosiciones}{t : toroide, posicion : $\ent \times \ent$}{\\
-	\IfThenElse{t[(posicion)_0][(posicion)_1] \\}
+	\IfThenElse{t[(posicion)_0][(posicion)_1] = \True \\}
 	{2 \leq cantVecinosVivos(t, (posicion)_0, (posicion)_1) \leq 3\\}
 	{cantVecinosVivos(t, (posicion)_0, (posicion)_1) = 3}
 	\\}
