@@ -34,7 +34,7 @@
 
 \subsection{Predicado principal}
 \pred{esValido}{t : \toroide} { \\
-esMatriz(t) \land |t[0]| \geq 3 \land |t| \geq 3 \\
+(\longitud{t} \geq 3 \land esMatriz(t)) \yLuego \longitud{t[0]} \geq 3 \\
 }
 
 \subsection{Predicados auxiliares}
