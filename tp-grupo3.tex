@@ -38,7 +38,10 @@ esMatriz(t) \land |t[0]| \geq 3 \land |t| \geq 3 \\
 }
 
 \subsection{Predicados auxiliares}
-MATRIZ LULI
+
+\pred{esMatriz}{m: \matriz{T}}{\\
+(\forall i : \ent)(0 \leq i < \longitud{m} \implicaLuego (\longitud{m[i]} > 0 \wedge (\forall j : \ent)(0 \leq j < \longitud{m} \implicaLuego \longitud{m[i]} = \longitud{m[j]}))\\
+}
 
 \section{Ejercicio 2}
 
