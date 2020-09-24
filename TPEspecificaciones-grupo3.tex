@@ -45,14 +45,22 @@
 
 \section{Ejercicio 2}
 
-\pred{toroideMuerto}{t : toroide}{\\
+\pred{toroideMuerto}{t : \toroide}{\\
 	(\forall i : \ent)((0 \leq i < |t|) \implicaLuego (\forall j : \ent) ((0 \leq j < |t[i]|) \implicaLuego (t[i][j] = \False)))
 	\\ }
 
 \section{Ejercicio 3}
 
-\pred{posicionesVivas}{t: \toroide, vivas: \Tlista{\ent \times \ent}}{\\
-(\forall i : \ent)((\forall j : \ent)(0 \leq i < \longitud{t} \yLuego 0 \leq j < \longitud{t[i]})) \implicaLuego ( (i,j) \in vivas \Iff t[i][j] = \True)\\
+\subsection{Predicados auxiliares}
+
+\pred{sinRepetidos}{vivas : \TLista{\ent \times \ent }  }{ \\
+ ( \forall i,j : \ent ) ( (0 \leq i,j < |vivas| \land i \neq j) \Rightarrow_L vivas[i] \neq vivas[j] ) \\
+ }
+
+\subsection{Función principal}
+
+\pred{posicionesVivas}{t: \toroide, vivas: \TLista{\ent \times \ent}}{\\ 
+ (\forall i : \ent)((\forall j : \ent)(0 \leq i < \longitud{t} \yLuego 0 \leq j < \longitud{t[i]})) \implicaLuego ( (i,j) \in vivas \Iff t[i][j] = \True) \land sinRepetidos(vivas) ) \\ 
 }
 
 \section{Ejercicio 4}
@@ -87,9 +95,9 @@
 \section{Ejercicio 6}
 
 \pred{evolucionDePosicion}{t : toroide, posicion : $\ent \times \ent$}{\\
-	\IfThenElse{t[(posicion)_0][(posicion)_1] = \True \\}
-	{2 \leq cantVecinosVivos(t, (posicion)_0, (posicion)_1) \leq 3\\}
-	{cantVecinosVivos(t, (posicion)_0, (posicion)_1) = 3}
+	( t[(posicion)_0][(posicion)_1] = \True \land 
+	2 \leq cantVecinosVivos(t, (posicion)_0, (posicion)_1) \leq 3 )\\ \lor 
+	( t[(posicion)_0][(posicion)_1] = \False \land cantVecinosVivos(t, (posicion)_0, (posicion)_1) = 3 )
 	\\}
 
 \section{Ejercicio 7}
