@@ -1,0 +1,288 @@
+\documentclass[a4paper]{article}
+\input{Algo1Macros}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath, amscd, amssymb, amsthm, latexsym}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{enumerate}
+\usepackage{parskip}
+\usepackage{comment}
+
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+\newcommand{\toroide}{Toroide}
+
+\setlength{\parindent}{2em} %espaciado horizontal
+\setlength{\parskip}{0.5em} %espaciado vertical
+
+
+\begin{document}
+
+\titulo{TP de Especificación}
+\fecha{\today}
+\materia{Algoritmos y Estructuras de Datos I}
+\grupo{Grupo  3}
+
+% CAMBIAR INTEGRANTES
+\integrante{Fernández Spandau, Luciana}{368/20}{fernandezspandau@gmail.com}
+\integrante{Reyna Maciel, Guillermo}{393/20}{guille.j.reyna@gmail.com}
+\integrante{Casado Farall, Joaquín}{072/20}{joakinfarall@gmail.com}
+\integrante{Companeetz, Ezequiel}{415/20}{echucompa@gmail.com}
+
+\maketitle
+
+
+
+\section{Ejercicio 1}
+
+\subsection{Predicado principal}
+\pred{esValido}{t : \toroide} { \\
+(\longitud{t} \geq 3 \land esMatriz(t)) \yLuego \longitud{t[0]} \geq 3 \\
+}
+
+\subsection{Predicados auxiliares}
+
+\pred{esMatriz}{m: \matriz{T}}{\\
+(\forall i : \ent)(0 \leq i < \longitud{m} \implicaLuego (\longitud{m[i]} > 0 \wedge (\forall j : \ent)(0 \leq j < \longitud{m} \implicaLuego \longitud{m[i]} = \longitud{m[j]}))\\
+}
+
+\section{Ejercicio 2}
+
+\pred{toroideMuerto}{t : \toroide}{\\
+	(\forall i : \ent)((0 \leq i < |t|) \implicaLuego (\forall j : \ent) ((0 \leq j < |t[i]|) \implicaLuego (t[i][j] = \False)))
+	\\ }
+
+\section{Ejercicio 3}
+
+\subsection{Predicados auxiliares}
+
+\pred{sinRepetidos}{vivas : \TLista{\ent \times \ent }  }{ \\
+ ( \forall i,j : \ent ) ( (0 \leq i,j < |vivas| \land i \neq j) \Rightarrow_L vivas[i] \neq vivas[j] ) \\
+ }
+
+\subsection{Función principal}
+
+\pred{posicionesVivas}{t: \toroide, vivas: \TLista{\ent \times \ent}}{\\ 
+ (\forall i : \ent)((\forall j : \ent)(0 \leq i < \longitud{t} \yLuego 0 \leq j < \longitud{t[i]})) \implicaLuego ( (i,j) \in vivas \Iff t[i][j] = \True) \land sinRepetidos(vivas) ) \\ 
+}
+
+\section{Ejercicio 4}
+
+\subsection{Función principal}
+\aux{densidadPoblacion}{t : toroide}{\float}{\\
+	cantidadVivos(t) \ / \ (|t| \cdot |t[0]|)}
+
+\subsection{Funciones auxiliares}
+\aux{cantidadVivos}{t : toroide}{\float}{\\
+	\sum_{i=0}^{|t|-1}
+	\sum_{j=0}^{|t[i]|-1}
+	\IfThenElse{t[i][j] = \True}{1}{0}}
+
+\section{Ejercicio 5}
+
+\subsection{Función principal}
+\aux{cantVecinosVivos}{t : \toroide, f : \ent , c : \ent}{\ent}{\\
+\sum_{i=0}^{|t|-1} \sum_{j=0}^{|t[i]| -1 } \IfThenElse{t[i][j] = \True \land sonVecinos(i,j,f,c,t)}{1}{0}
+}
+
+\subsection{Predicados auxiliares}
+\pred{sonVecinos}{x,y : \ent , $v_1, v_2$ : \ent, t : \toroide}{\\
+(v_1 \neq x \lor v_2 \neq y) \ \land \ (distancia(x, v_1, |t|) , \ distancia(y, v_2, |t[0]|) \leq 1) \\
+} /*Siendo (x,y) las coordenadas de la posición a evaluar y $(v_1, v_2)$ las del vecino */
+
+\subsection{Funciones auxiliares}
+\aux{abs}{n : \float}{\float}{ \IfThenElse{n<0}{ -n}{n}}  
+\aux{distancia}{$x_1$ : \ent, $x_2$ : \ent, rango: \ent}{\float}{abs (x_1- x_2) \ mod \  rango}
+/*Siendo rango la variable para tener en cuenta los vecinos de los bordes*/
+
+\section{Ejercicio 6}
+
+\pred{evolucionDePosicion}{t : toroide, posicion : $\ent \times \ent$}{\\
+	( t[(posicion)_0][(posicion)_1] = \True \land 
+	2 \leq cantVecinosVivos(t, (posicion)_0, (posicion)_1) \leq 3 )\\ \lor 
+	( t[(posicion)_0][(posicion)_1] = \False \land cantVecinosVivos(t, (posicion)_0, (posicion)_1) = 3 )
+	\\}
+
+\section{Ejercicio 7}
+
+\pred{evolucionToroide}{t1: \toroide, t2: \toroide}{\\
+(\longitud{t1} = \longitud{t2} \wedge \longitud{t1[0]} = \longitud{t2[0]}) \yLuego \\
+(\forall i : \ent)((\forall j : \ent)((0 \leq i < \longitud{t1} \yLuego 0 \leq j < \longitud{t1[i]}) \implicaLuego \\
+evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
+}
+
+
+
+\section{Ejercicio 8}
+
+\subsection{Predicado auxiliar}
+
+\pred{esToroideEvolucionK}{k : \ent , t1,t2 : \toroide}{ \\  k \geq 0 \land
+( \exists ts : \TLista{\toroide} ) \ ( \ |ts| = k+1 \land  (\forall i : \ent ) (0 \leq i < |ts| -1 \Rightarrow_L esValido(ts[i]) \land esValido(t[i+1]) \land  evolucionToroide( ts[i], ts[i+1]) \ )  \land t1 = ts[0] \land t2 = ts[ |ts| -1 ] ) \\
+}
+
+\subsection{Función auxiliar}
+
+\pred{MismaDimension}{t1,t2 : \toroide}{ \\
+|t1| = |t2| \land |t2[0]| = |t2[0]| \land esValido(t1) \land esValido(t2)
+\\ }
+
+\subsection{Proceso}
+
+\begin{proc}{evolucionMultiple}{\In t1 \toroide, \In k : \ent,  \Out result: \toroide}{}
+    \pre{ k \geq 1  \land esValido(t1)}
+    
+    \post{esValido(res) \land esToroideEvolucionK(k,t1,res)  }
+\end{proc}
+
+\section{Ejercicio 9}
+
+\subsection{Predicado Auxiliar} 
+
+\pred{esPeriodo}{ t: \toroide}{ \\
+( \exists k: \ent ) \ ( k > 0 \land  esToroideEvolucionK(k,t,t) )
+\\ }
+
+\subsection{Proceso}
+
+\begin{proc}{esPeriodico}{ \In t : \toroide, \Inout p : \ent , \Out result : \bool }{}
+    \pre{p = P_0 \land esValido(t)}
+    
+    \post{ result = \True \Leftrightarrow esPeriodo(t) \ \land \\ (result = \True \Rightarrow_L ( \forall k: \ent ) \ ( k > 0 \land  esToroideEvolucionK(k,t,t) \Rightarrow k \leq p )}
+
+%  La segunda condición es para que p sea la menor cantidad de Ticks
+\end{proc}
+
+\section{Ejercicio 10}
+
+\subsection{Proceso}
+
+\begin{proc}{primosLejanos}{ \In t1 : \toroide , \In t2 : \toroide,  \Out result : \bool}{}
+
+    \pre{esValido(t1) \land esValido(t2)}
+    
+    \post{( \exists k: \ent ) \ ( k > 0 \land  ( \ esToroideEvolucionK(k,t1,t2) \ \lor \ esToroideEvolucionK(k,t2,t1) }
+
+\end{proc}
+
+\section{Ejercicio 11}
+
+\subsection{Predicados Auxiliares}
+
+Me dice si el toroide muere en algún momento\\
+\pred{Muere}{t : \toroide}{
+\neg(esPeriodo(t) \land \neg toroideMuerto(t) )}
+
+
+/* Es medio inecesario el para todo del tm, pero no sé cómo escribirlo sino. Además está función sólo sirve si el toroide muere, sino siempre da True  */ 
+
+/*Chequea si es la cantidad de ticks hasta morir del toroide */
+
+
+\pred{esTicksValido}{k : \ent , t : \toroide}{\\
+( \forall i: \ent) \ ( \ ( \forall tm :\toroide ) \ ( ( \ toroideMuerto(tm) \land esToroideEvolucionK (i, t1, tm) \ ) \Rightarrow \\
+(  esToroideEvolucionK (k , t, tm)  \land i \leq k \ ) \ ) \ ) \land k \geq 0 
+\\}
+
+/* Otra forma de pensarlo */ 
+Lo podes pensar sino cómo que el toroide la de evolución k-1 está vivo y el de la evolución k la palmo, pero para mi no queda tan bello
+
+/* Devuelve si el toroide está muerto luego de k ticks */
+
+\pred{muertoEnK}{k : \ent , t : \toroide}{\\
+( \exists tm : \toroide ) \ ( esValido(tm) \land toroideMuerto(tm) \land esToroideEvolucionK(k,t,tm) \ ) }
+
+\subsection{Proceso}
+
+\begin{proc}{seleccionNatural}{\In ts : \TLista{\toroide} \Out res : \ent}{}
+    \pre{( \forall tor : \toroide ) ( tor \in ts \Rightarrow esValido(tor) ) }
+    
+    \post{ 0 \leq res < |ts| \land ( \neg 
+    Muere( ts[res]) \lor  ( \forall i,tick : \ent)  ( 0 \leq i < |ts| \Rightarrow_L ( \ 
+    esTickValido(  tick, ts[i] ) \Rightarrow_L \ \neg muertoEnK(tick-1, ts[res]) ) \ ) \ )  
+    }
+
+\end{proc}
+
+/* Si hay un toroide que es periodico dentro de la secuencia entonces cómo cualquier tick es válido si hay un toroide que no es periodico no va a poder ser seleccionado ya que va a existir un tick -1 válido en el que muera, por lo tanto sólo los periodicos van a poder ser seleccionados */ 
+
+\section{Ejercicio 12}
+
+\subsection{Funciones Auxiliares}
+
+\aux{min}{x1,x2 : \ent}{\ent}{\IfThenElse{x1<x2}{x1}{x2}}
+
+/* Apariciones de las tuplas */
+
+\aux{apariciones}{vivas : \TLista{\ent \times \ent} , ele : \ent \times \ent}{$\ent$}{ $\sum_{i=0}^{|vivas| -1}$ \IfThenElse{ele = vivas[i]}{1}{0} }
+
+\subsection{Predicados Auxiliares}
+
+\pred{interseccion}{s,t : \toroide, inter : \toroide}{ 
+\\ ( \forall i,j : \ent ) ( \ ( 0 \leq i < |s| \land_L 0 \leq j < |s[i]| \ ) \Rightarrow_L ( \ ( ( s[i][j] = \True \land t[i][j] = \True ) \land inter[i][j] = \True ) \lor ( \neg ( s[i][j] = \True \land t[i][j] = \True ) \land inter[i][j] = \False ) \ ) \ )
+}
+
+\subsection{Proceso}
+
+\begin{proc}{fusionar}{\In t1 : \toroide, \In t2 : \toroide , \Out res : \toroide}{}
+    \pre{mismaDimension(t1,t2)}
+    \post{mismaDimension(t1, res) \land interseccion(t1,t2, res)}
+
+\end{proc}
+
+
+\section{Ejercicio 13}
+
+\subsection{Predicados Auxiliares}
+
+\pred{esTraslacion}{t1,t2 : \toroide}{ mismaDimension(t1, t2) \land \\
+( \exists x,y : \ent ) \ ( \ ( \forall i,j : \ent ) \ ( \ ( 0 \leq i < |s| \land_L 0 \leq j < |s[i]| ) \Rightarrow_L t1[i+y \bmod |t| ] \ [j+x \bmod |t[0]| ] = t2[i][j] \ ) )   
+}
+
+\begin{proc}{vistaTrasladada}{\In t1 : \toroide, \In t2 : \toroide , \Out res : \bool}{}
+    \pre{mismaDimension(t1,t2)}
+    \post{res = \True \Leftrightarrow esTraslacion(t1, t2) }
+
+\end{proc}
+
+\section{Ejercicio 14}
+
+\subsection{Predicados auxiliares}
+
+/* Cumple que sea menor igual a todas las superificies posibles e igual a una, por lo tanto es la mínima */
+
+\pred{esMenorSuperficie}{t : \toroide, res : \ent}{ \\ 0 \leq res \leq |t|*|t[0]| \land_L  ( \forall largo, alto : \ent) \ ( \forall i,j : \ent) \ ( \ ( 0 \leq i,alto < 0 \land_L 0 \leq j,largo < |t[i]| ) \\ \Rightarrow_L \ ( \  ( \sum_{fi=i}^{i+alto} \sum_{co=j}^{j+largo} \IfThenElse{t[fi \bmod |t|][co \bmod |t[0]|] = true}{1}{0}  ) = cantidadVivos(t) \Rightarrow alto * largo \leq res ) \land  \\
+ ( \exists largo_2, alto_2 : \ent) \ ( \exists i,j : \ent) \ ( \ ( 0 \leq i,alto_2 < 0 \land_L 0 \leq j,largo_2 < |t[i]| ) \\ \Rightarrow_L \ ( \  ( \sum_{fi=i}^{i+alto_2} \sum_{co=j}^{j+largo_2} \IfThenElse{t[fi \bmod |t|][co \bmod |t[0]|] = true}{1}{0}  ) = cantidadVivos(t) \Rightarrow alto_2 * largo_2 = res )) }
+
+\subsection{Procesos}
+
+/* Quedo medio feo, habría que ver cómo usar traslación */
+
+\begin{proc}{menorSuperficieViva}{\In t : \toroide, \Out res : \ent}{}
+    \pre{esValido(t)}
+    \post{   esMenorSuperficie(t,res)}
+    
+\end{proc}
+
+\section{Ejercicio 15}
+
+\subsection{Procesos}
+
+\begin{proc}{enCrecimiento}{\In t : \toroide, \Out res : \bool}{}
+    \pre{esValido(t)}
+    \post{ ( \exists super : \ent ) \ 
+    ( \ esMenorSuperficie(t,super) \Rightarrow_L \ ( ( \exists torEvol : \toroide ) ( evolucionToroide(t,torEvol) \land ( \exists superMayor : \ent) ( superMayor > super \land esMenorSuperficie(torEvol,superMayor) \ ) \ ) \ ) \ ) }
+    
+\end{proc}
+
+
+\section{Decisiones tomadas}
+En cada ejercicio asumimos que el usuario debe cumplir con el contrato pasando un toroide válido, para simplificar la escritura.
+\\Ademas de eso no tomamos ninguna decision muy relevante al momento de resolver los ejercicios, mas que interpretar los enunciados y a partir de eso escribir las especificaciones que pensamos adecuadas.
+
+Segunda Parte: 
+    Ejercicio 8 + 9: Elegí que un Toroide muerto sea considerado cómo uno periódico de p=1.
+    Además si no es periódico p puede ser cualquier cosa y no me importa.
+    Ejercicio 11: Cómo los periodicos no se mueren en ninguna cantidad de ticks entonces si hay periodicos en la secuencia res devuelve un periodico
+
+\end{document}
