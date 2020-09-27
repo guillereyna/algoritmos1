@@ -122,14 +122,15 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 \subsection{Predicados auxiliares}
     \pred{kTicksEvolucion}{k : \ent, t, result : toroide}{\\
     (\exists evo : \TLista{toroide})((k = |evo| - 1 \land evo[0] = t \land evo[k] = result) \land_L \\
-    (\forall i : \ent)(1 \leq i \leq k \implicaLuego evolucionToroide(evo[i-1], evo[i])))
+    (\forall i : \ent)(1 \leq i \leq k \implicaLuego (esValido(evo[i]) \land_L evolucionToroide(evo[i-1], evo[i]))))
     \\}
 
 \section{Ejercicio 9}
 
 \begin{proc}{esPeriodico}{\In t : toroide, \Inout p : \ent, \Out result : \bool}{}
     \pre{esValido(t)}
-    \post{result = \True \leftrightarrow (p > 0 \land kTicksEvolucion(p, t, t))}
+    \post{result = \True \leftrightarrow (p > 0 \ \land \ kTicksEvolucion(p, t, t) \land \\
+    (\forall k : \ent)(k > 0 \land kTicksEvolucion(k,t,t) \implicaLuego k \leq p))}
 \end{proc}
 
 \section{Ejercicio 10}
@@ -146,7 +147,7 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
     \\}
 
 \pred{sonPrimos}{t1, t2 : toroide}{\\
-    (\exists k : \ent)(k > 0 \land kTicksEvolucion(k, t1, t2))
+    (\exists k : \ent)(k > 0 \land (kTicksEvolucion(k, t1, t2) \lor kTicksEvolucion(k,t2,t1)))
     \\}
 
 \section{Ejercicio 11}
@@ -184,7 +185,7 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
 \subsection{Procedimiento}
 \begin{proc}{fusionar}{\In t1 : toroide, \In t2 : toroide, \Out res : toroide}{}
     \pre{esValido(t1) \land esValido(t2) \land mismoTablero(t1, t2)}
-    \post{esValido(res) \land esInterseccion(t1, t2, res)}
+    \post{esValido(res) \land mismoTablero(t1,res) \land esInterseccion(t1, t2, res)}
 \end{proc}
 
 \subsection{Predicados auxiliares}
@@ -212,8 +213,7 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
 \subsection{Procedimiento}
 \begin{proc}{menorSuperficieViva}{\In t : toroide, \Out res : \ent}{}
     \pre{esValido(t)}
-    \post{res > 0 \\ 
-    \land_L (esMenorSuperficie(t,res) \ \land \ esMenorSuperficieEnTraslacion(t, res))}
+    \post{res > 0 \land esMenorSuperficieEnTraslacion(t, res))}
 \end{proc}
 
 \subsection{Predicados auxiliares}
@@ -223,12 +223,8 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
     (esMenorRectangulo(t2,i1,i2,j1,j2) \land area(i1,i2,j1,j2) < res)))
     \\}
 
-\pred{esMenorSuperficie}{t : toroide, res : \ent}{\\
-    \neg (\exists i1, i2, j1, j2)((0 \leq i1 < i2 < |t| \land 0 \leq j1 < j2 < |t[0]) \land_L \\
-    (esMenorRectangulo(t, i1, i2, j1, j2) \land area(i1, i2, i3, i4) < res))
-    \\}
-
 \pred{esMenorRectangulo}{t : toroide, i1, i2, j1, j2 : \ent}{\\
+    contieneTodosVivos(t, i1, i2, j1, j2) \land \\
     \neg (\exists i3, i4, j3, j4 : \ent)((0 \leq i3 < i4 < |t| \land 0 \leq j3 < j4 < |t[0]) \land_L \\
     contieneTodosVivos(t, i3, i4, j3, j4) \land area(i3, i4, j3, j4) < area(i1, i2, j1, j2))
     \\}
@@ -257,7 +253,7 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
 \subsection{Predicados auxiliares}
 \pred{estaCreciendo}{t : toroide}{\\
     (\exists t2 : toroide)(evolucionToroide(t, t2) \land \\
-    (\exists k, m : \ent)((0 < k < m) \land_L (esMenorSuperficie(t, k) \land esMenorSuperficie(t, m))))
+    (\exists k, m : \ent)((0 < k < m) \land_L (esMenorSuperficie(t, k) \land esMenorSuperficie(t2, m))))
     \\}
 
 \section{Decisiones tomadas}
