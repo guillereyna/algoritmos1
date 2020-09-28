@@ -213,11 +213,12 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
 \subsection{Procedimiento}
 \begin{proc}{menorSuperficieViva}{\In t : toroide, \Out res : \ent}{}
     \pre{esValido(t)}
-    \post{res > 0 \land esMenorSuperficieEnTraslacion(t, res))}
+    \post{res \geq 0 \land esMenorSuperficieEnTraslacion(t, res))}
 \end{proc}
 
 \subsection{Predicados auxiliares}
 \pred{esMenorSuperficieEnTraslacion}{t : toroide, res : \ent}{\\
+    toroideMuerto(t) \lor \\
     \neg (\exists t2 : toroide)(esTraslacion (t, t2) \land \\
     (\exists i1, i2, j1, j2)((0 \leq i1 < i2 < |t2| \land 0 \leq j1 < j2 < |t2[0]) \land_L \\
     (esMenorRectangulo(t2,i1,i2,j1,j2) \land area(i1,i2,j1,j2) < res)))
