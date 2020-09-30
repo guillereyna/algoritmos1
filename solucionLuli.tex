@@ -1,0 +1,313 @@
+\documentclass[spanish, a4paper]{article}
+\setlength{\parindent}{0em}
+\usepackage{a4wide}
+\usepackage{amsmath, amscd, amssymb, amsthm, latexsym}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\newcommand{\tupla}[2]{#1 \times #2}
+\input{Algo1Macros}
+
+\setlength{\parskip}{0.1em}
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+
+
+\begin{document}
+\newcommand{\toroide}{\textit{toroide}}
+\newcommand{\bin}{\ensuremath{\ent \times \ent}}
+
+\titulo{TP de Especificación}
+\fecha{\today}
+\materia{Algoritmos y Estructuras de Datos I}
+\grupo{Grupo: INSERTE NÚMERO AQUÍ}
+
+% CAMBIAR INTEGRANTES
+\integrante{Wazowski, Mike}{002/12}{mwazowski@dc.uba.ar}
+\integrante{Bond, James}{007/007}{bond@mi6.co.uk}
+\integrante{Capunta, Elsa}{003/17}{ecapunta@dc.uba.ar}
+\integrante{Sánchez, Warren}{004/15}{tienelasrespuestas@les.luthier.com}
+
+\maketitle
+
+
+
+\section{Ejercicios - Primera Parte}
+
+
+
+%ESCRIBIR  SOLUCIONES AQUÍ
+
+\begin{ejercicio}[:]
+\textbf{pred esValido(t: $\toroide$)}
+
+
+\end{ejercicio}
+
+\begin{ejercicio}[:]
+\textbf{pred toroideMuerto(t: $\toroide$)}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:]
+\textbf{pred posicionesVivas(t: $\toroide$, vivas : $\TLista{\tupla{\ent}{\ent}}$)}
+
+\end{ejercicio}
+
+\begin{ejercicio}[:]
+\textbf{aux densidadPoblacion(t: $\toroide$) = $\float$}
+
+\end{ejercicio}
+
+\begin{ejercicio}[:]
+\textbf{aux cantVecinosVivos(t: $\toroide$, f: $\ent$, c: $\ent$) = $\ent$}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:]
+\textbf{pred evolucionDePosicion(t: $\toroide$, posicion : $\tupla{\ent}{\ent}$)}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:]
+\textbf{pred evolucionToroide(t1: $\toroide$, t2: $\toroide$)}
+
+\end{ejercicio}
+
+
+
+
+
+\section{Ejercicios - Segunda Parte}
+
+%COMANDOS UTILES:
+	% \hspace{4cm}: deja un espacio de 4cm entre cada línea 
+	% \\ comienza una nueva línea 	
+
+\begin{ejercicio}[:] \textbf{proc evolucionMultiple(in t: $\toroide$, in k: $\ent$, out result: $\toroide$)}\\
+
+\begin{proc}{evolucionMultiple}{in t: $\toroide$, in k: $\ent$, out result: $\toroide$}{}
+    \pre{(k > 0) \land esValido(t)} % k = 0 sería valido?
+    \post{
+    esLaKEsimaEvolucion(result, t, k)
+    }
+
+\end{proc}
+
+\begin{pred}{esLaKesimaEvolucion}{evolucion: \toroide, t: \toroide, k: \ent}{\\
+    \text{/* Decide si $evolucion$ es la k-ésima evolución de $t$ */}
+    \\
+    (\exists l : \TLista{\toroide})(\\ \\
+    \longitud{l} \geq k+1 \land \\
+    toroidesValidos(l) \yLuego \\(
+    l[0] = t \land \\
+    dimensionesIguales(l) \land\\
+    (\forall i : \ent)(0 \leq i < \longitud{l} - 1) \implicaLuego evolucionToroide(l[i], l[i+1])) \\ \yLuego \\
+    result = l[k]) \\
+}
+
+\end{pred}
+
+\begin{pred}{dimensionesIguales}{ts: \TLista{\toroide}}{\\
+    \text{/* Dada una secuencia de toroides, decide si todos los toroides tienen la misma dimensión */} \\
+    (\forall i,j: \ent)((0 \leq i,j < \longitud{ts}) \implicaLuego dim[ts[i]] = dim[ts[j]]) \\
+}
+    
+\end{pred}
+\begin{aux}{dim}{t: \toroide}{$\ent \times \ent$}{(\longitud{t}, \longitud{t[0]})}
+\end{aux}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:] \textbf{proc esPeriodico(in t: $\toroide$, inout p: $\ent$, out result: $\bool$)}\\
+
+\begin{proc}{esPeriodico}{in t: $\toroide$, inout p: $\ent$, out result: $\bool$}{}
+    \pre{(p = P_0) \land esValido(t)}
+    \post{\\
+    \text{/* Es periódico si existe algún k $>$ 0 tal que la k-ésima evolución de t es t */}\\
+    result = \True \Iff esPeriodo(t) \yLuego \\
+    ((result = \True \Then !(\exists k : \ent)(0 < k < p \yLuego esLaKEsimaEvolucion(t, t, k)) \land \\
+    (result = \False \Then p = P_0))\\
+    }
+
+\end{proc}
+
+\begin{pred}{esPeriodo}{t: toroide}{\\
+(\exists k : \ent)(k > 0 \yLuego esLaKEsimaEvolucion(t, t, k))\\
+}
+\end{pred}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:] \textbf{proc primosLejanos(in t1: $\toroide$, in t2: $\toroide$, out primos: $\bool$)}
+\\
+
+\begin{proc}{primosLejanos}{in t1: $\toroide$, in t2: $\toroide$, out primos: $\bool$}{}
+    \pre{(esValido(t1) \land esValido(t2)) \yLuego dim(t1) = dim(t2)}
+    \post{ \\
+    primos = \True \Iff (\exists k : \ent)(k > 0 \yLuego \\
+    (esLaKEsimaEvolucion(t2, t1, k) \lor esLaKEsimaEvolucion(t1, t2, k))) \\
+    }
+
+\end{proc}
+
+\end{ejercicio}
+
+
+
+\begin{ejercicio}[:] \textbf{proc seleccionNatural(in ts: $\TLista{\toroide}$, out res: $\ent$)}\\
+
+\begin{proc}{seleccionNatural}{in ts: $\TLista{\toroide}$, out res: $\ent$}{}
+    \pre{\\
+    (\forall i : \ent)(0 \leq i < \longitud{ts} \implicaLuego esValido(ts[i])) \yLuego \\
+    (dimensionesIguales(ts) \land \\
+    todasMuerenEnAlgunTick(ts)) \\
+    }
+    \post{\\
+    res \in ts \land \\
+    !(\exists t : \toroide)(t \in ts \land muereAntesQue(res, t))\\
+    }
+
+\end{proc}
+
+\begin{pred}{todasMuerenEnAlgunTick}{ts: \TLista{\toroide}} { \\
+    (\forall t: \toroide)(t \in ts \implicaLuego \\
+    (\exists k: \ent)(k > 0 \yLuego muereEnKEsimoTick(t, k))) \\
+    }
+\end{pred}
+
+\begin{pred}{muereAntesQue}{antes: \toroide, despues: \toroide}{\\
+    (\exists n,m : \ent)((n,m>0) \land (n < m) \\
+    \land muereEnKEsimoTick(antes, n) \land muereEnKEsimoTick(despues, m) \\
+}
+
+\begin{pred}{muereEnKEsimoTick}{t: \toroide, k: \ent}{ \\
+    (\exists m: \toroide)(dim(m) = dim(t) \yLuego toroideMuerto(m) \yLuego esLaKEsimaEvolucion(m, t, k)) \land \\
+    !(\exists i : \ent)( (0 < i < k) \yLuego esLaKEsimaEvolucion(t, m, k))
+}
+
+\end{pred}
+
+\end{pred}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:] \textbf{proc fusionar(in t1: $\toroide$, in t2: $\toroide$, out res: $\toroide$)}
+\\
+
+\begin{proc}{fusionar}{in t1: $\toroide$, in t2: $\toroide$, out res: $\toroide$}{}
+    \pre{(esValido(t1) \land esValido(t2)) \yLuego dim(t1) = dim(t2)}
+    \post{\\
+    esValido(res) \yLuego (\\
+    dim(res) = dim(t1) \yLuego \\
+    (\forall i, j : \ent)((0 \leq i < \longitud{t1}) \land (0 \leq j < \longitud{t1[0]}) \implicaLuego \\
+    (res[i][j] = \True \Iff t1[i][j] = \True \land t2[i][j] = \True)) \\
+    }
+
+\end{proc}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:] \textbf{proc vistaTrasladada(in t1: $\toroide$, in t2: $\toroide$, out res: $\bool$)}\\
+
+\begin{proc}{vistaTrasladada}{in t1: $\toroide$, in t2: $\toroide$, out res: $\bool$}{}
+    \pre{(esValido(t1) \land esValido(t2)) \yLuego dim(t1) = dim(t2)}
+    \post{res=\True \Iff esRotacion(t1, t2)}
+
+\end{proc}
+
+\begin{pred}{esRotacion}{t1: \toroide, t2: \toroide}{ \\
+    dim(t1) = dim(t2) \yLuego \\
+    (\exists k,l :\ent)( \\
+    (\forall i,j :\ent)((0 \leq i < \longitud{t1} \land 0 \leq j < \longitud{t1[0]}) \implicaLuego \\
+    t1[i][j] = t2[(i+k)\% \longitud{t2}][(j+l) \% \longitud{t2[0]}]))  \text{/* Para que no se me pase de rango */}\\
+}
+
+\end{pred}
+
+\end{ejercicio}
+
+
+
+\begin{ejercicio}[:] \textbf{proc menorSuperficieViva(in t: $\toroide$, out res: $\ent$)}
+\\
+
+\begin{proc}{menorSuperficieViva}{in t: $\toroide$, out res: $\ent$}{}
+    \pre{esValido(t) \land !toroideMuerto(t)}
+    \post{
+    esAreaDeMenorSuperficieViva(res, t)
+    }
+
+\end{proc}
+
+\begin{pred}{esAreaDeMenorSuperficieViva}{n: \ent, t: \toroide}{\\
+    existeTraslacionConSuperficieVivaDeArea(n, t) \yLuego \\
+    noExisteTraslacionConAreaMenorViva(n, t) \\
+}
+    
+\end{pred}
+
+\begin{pred}{existeTraslacionConSuperficieVivaDeArea}{n: \ent, t: \toroide}{\\
+(\exists t0 : \TLista{\toroide})(esValido(t0) \yLuego esRotacion(t, t0) \yLuego \\
+existeSuperficieVivaDeArea(n, t0) \\
+}
+\end{pred}
+
+\begin{pred}{existeSuperficieVivaDeArea}{n: \ent, t: \toroide}{\\
+\text{/* Acá dejo de considerarlo un toroide, pues estoy mirando para cada traslación. */} \\
+\text{/* Sería mejor no mirar cada traslación y considerarlo un toroide?? */} \\
+(\exists i,j : \ent)((0 \leq i < \longitud{t} \land 0 \leq j < \longitud{t[0]}) \yLuego \\ 
+(\forall k,l : \ent)(0 \leq k \leq (\longitud{t}-i) \land 0 \leq l \leq (\longitud{t[0]} - j) \implicaLuego \\ (sumaVivasRango(t, i, j, k, l) = posicionesVivas(t) \land n = $(k+1-i)\cdot(l+1-j)$)) \\
+}
+\end{pred}
+
+\begin{aux}{sumaVivasRango}{t: \toroide, desde_x: \ent, desde_y: \ent, hasta_x: \ent, hasta_y: \ent}{\ent}{\\
+$\sum_{i=0}^{\longitud{t}-1} \sum_{j=0}^{\longitud{t[0]-1}} \IfThenElse{(desde_x \leq i < hasta_x) \land (desde_y \leq j < hasta_y) \land t[i][j] = \True}{1}{0}$
+}
+
+\end{aux}
+
+\begin{pred}{noExisteTraslacionConAreaMenorViva}{n: \ent, t: \toroide}{\\
+    !(\exists t0 : \TLista{\toroide})(esValido(t0) \yLuego esRotacion(t, t0) \yLuego \\
+    (\exists m: \ent)(0 < m < n \yLuego existeSuperficieVivaDeArea(m, t0))) \\
+}
+\end{pred}
+
+\end{ejercicio}
+
+
+\begin{ejercicio}[:] \textbf{proc enCrecimiento(in t: $\toroide$, out res: $\bool$)}\\
+
+\begin{proc}{enCrecimiento}{in t: $\toroide$, out res: $\bool$}{}
+    \pre{esValido(t)}
+    \post{
+    res = true \Iff (\exists evol: \toroide)(esLaKesimaEvolucion(evol, t, 1) \yLuego suSuperficieVivaEsMayorQueLaDe(t, evol))
+    }
+
+\end{proc}
+
+\begin{pred}{suSuperficieVivaEsMayorQueLaDe}{t_{min}: \toroide, t_{max}: \toroide}{\\
+    (\exists s_{min}, s_{max})(esAreaDeMenorSuperficieViva(s_{min}, t_{min}) \land esAreaDeMenorSuperficieViva(s_{max}, t_{max}) \land \\
+    s_{min} < s_{max})
+}
+
+\end{pred}
+
+\end{ejercicio}
+
+
+\section{Decisiones tomadas}
+
+%Aquí deben agregar todo lo que hayan asumido para realizar cada ejercicio. No tienen que hablar sobre la estructura (por ejemplo justificar por qué separaron predicados/auxiliares o explicarlos). Tampoco repetir lo que dice el enunciado, pero SI cualquier asunción extra que realicen (en caso de que hagan alguna).
+
+%Tomar en cuenta que no pueden asumir cualquier cosa, ya que podrían estar simplificando el ejercicio, consulten cualquier decisión que tomen! :)
+
+\end{document}
