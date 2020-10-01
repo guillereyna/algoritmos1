@@ -54,17 +54,17 @@
 
 \section{Ejercicio 3}
 
-\subsection{Predicados auxiliares}
-
-\pred{sinRepetidos}{vivas : \TLista{\ent \times \ent }  }{ \\
- ( \forall i,j : \ent ) ( (0 \leq i,j < |vivas| \land i \neq j) \Rightarrow_L vivas[i] \neq vivas[j] ) \\
- }
-
 \subsection{Función principal}
 
 \pred{posicionesVivas}{t: \toroide, vivas: \TLista{\ent \times \ent}}{\\ 
  (\forall i : \ent)((\forall j : \ent)(0 \leq i < \longitud{t} \yLuego 0 \leq j < \longitud{t[i]})) \implicaLuego ( (i,j) \in vivas \Iff t[i][j] = \True) \land sinRepetidos(vivas) ) \\ 
 }
+
+\subsection{Predicados auxiliares}
+
+\pred{sinRepetidos}{vivas : \TLista{\ent \times \ent }  }{ \\
+ ( \forall i,j : \ent ) ( (0 \leq i,j < |vivas| \land i \neq j) \Rightarrow_L vivas[i] \neq vivas[j] ) \\
+ }
 
 \section{Ejercicio 4}
 
@@ -137,12 +137,12 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 
 \subsection{Procedimiento}
 \begin{proc}{primosLejanos}{\In t1 : toroide, \In t2 : toroide, \Out primos : \bool}{}
-    \pre{esValido(t1) \land esValido(t2) \land mismoTablero(t1, t2)}
+    \pre{esValido(t1) \land esValido(t2) \land dim(t1, t2)}
     \post{result = \True \leftrightarrow sonPrimos(t1,t2)}
 \end{proc}
 
 \subsection{Predicados auxiliares}
-\pred{mismoTablero}{t1, t2 : toroide}{\\
+\pred{dim}{t1, t2 : toroide}{\\
     |t1| = |t2| \land |t1[0]| = |t2[0]|
     \\}
 
@@ -257,8 +257,17 @@ Esta función tendría que contar la cantidad de ticks que está vivo un toroide
     (\exists k, m : \ent)((0 < k < m) \land_L (esMenorSuperficie(t, k) \land esMenorSuperficie(t2, m))))
     \\}
 
+    
 \section{Decisiones tomadas}
-En cada ejercicio asumimos que el usuario debe cumplir con el contrato pasando un toroide válido, para simplificar la escritura.\\ 
+En cada ejercicio de la primera parte asumimos que el usuario debe cumplir con el contrato pasando un toroide válido, para simplificar la escritura.
+ En general, en los predicados asumimos que los parámetros pasados son válidos cuando posible, y la validez de los parámetros pasados es verificada en los procedimientos.\\ 
+\indent En el ejercicio 9, tomamos la decisión de que en caso de que el resultado sea falso, el parámetro p debe tener el mismo valor que se le pasó originalmente. \\
+\indent En el ejercicio 10, decidimos que un toroide debe evolucionar una cantidad positiva de ticks. O sea, dado un toroide t, el mismo toroide t 
+es primo de t únicamente si t es periódico. \\
+\indent En el ejercicio 13, decidimos que la traslación (0, 0), que es igual a la traslación
+($|t|$, $|t[0]$) es una traslación válida. 
+También, nuestro procedimiento es indiferente a cuál traslación se está evaluando, siempre y cuando sea una traslación válida. 
+Asumimos que, por ejemplo, una traslación de (-4, -3) es válida.\\
 \indent Además de eso no tomamos ninguna decisión muy relevante al momento de resolver los ejercicios, más que interpretar los enunciados y a partir de eso escribir las especificaciones que pensamos adecuadas.
-
 \end{document}
+

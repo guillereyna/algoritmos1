@@ -127,22 +127,24 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 
 \subsection{Predicado auxiliar}
 
-\pred{esToroideEvolucionK}{k : \ent , t1,t2 : \toroide}{ \\  k \geq 0 \land_L
+\pred{esToroideEvolucionK}{k : \ent , t1, t2 : \toroide}{ \\  k \geq 0 \land_L
 ( \exists ts : \TLista{\toroide} ) \ ( \ |ts| = k+1 \land  (\forall i : \ent ) (0 \leq i < |ts| -1 \Rightarrow_L ( esValido(ts[i]) \land esValido(t[i+1]) \ ) \land_L  evolucionToroide( ts[i], ts[i+1]) \ )  \land t1 = ts[0] \land t2 = ts[ k ] ) \\
 }
 
 \section{Ejercicio 9}
 
+\subsection{Procedimiento}
 \begin{proc}{esPeriodico}{in t: \toroide, inout p: \ent, out result: \bool}{}
     \pre{(p = P_0) \land esValido(t)}
     \post{\\
     result = \True \Iff esPeriodo(t) \yLuego \\
-    (\ (result = \True \Then !(\exists k : \ent)(0 < k < p \yLuego esToroideEvolucionK(t, t, k) ) \land \\
+    (\ (result = \True \Then \neg (\exists k : \ent)(0 < k < p \yLuego esToroideEvolucionK(t, t, k) ) \land \\
     (result = \False \Then p = P_0) \ )\\
     }
 
 \end{proc}
 
+\subsection{Predicados auxiliares}
 \begin{pred}{esPeriodo}{t: toroide}{\\
 (\exists k : \ent)(k > 0 \yLuego esToroideEvolucionK(t, t, k))\\
 }
@@ -164,13 +166,13 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
     \\}
 
 \pred{sonPrimos}{t1, t2 : toroide}{\\
-    (\exists k : \ent)(k > 0 \land (kTicksEvolucion(k, t1, t2) \lor kTicksEvolucion(k,t2,t1)))
+    (\exists k : \ent)(k > 0 \land (esToroideEvolucionK(t1, t2, k) \lor esToroideEvolucionK(t2, t1, k)))
     \\}
 
 \section{Ejercicio 11}
 
 \subsection{Procedimiento}
-\begin{proc}{seleccionNatural}{\In ts: \TLista{\toroide}, \Out res:\ent}{}
+\begin{proc}{seleccionNatural}{\In ts: \TLista{\toroide}, \Out res : \ent}{}
 \pre{(\forall i:\ent)(0\leq i < \longitud{ts} \implicaLuego esValido(ts[i])}
 \post{(\exists n: \ent)(0\leq n < \longitud{ts} \land \neg(muere(ts[i])) \land res = n)  \vee  (\exists i:\ent)(  0\leq i <\longitud{ts} \land_L \\  (\forall j:\ent)(0\leq j <\longitud{ts} \implicaLuego muere(ts[i]) \yLuego muere(ts[j]) \yLuego muerePrimero(ts[j], ts[i]) ) \land res = i)}
 \end{proc}
@@ -181,14 +183,14 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 }
 
 \pred{muerePrimero}{t1: \toroide, t2:\toroide}{\\
-    (\exists tm:\toroide)( esValido(tm) \land_L toroideMuerto(tm) \land  (\exists n:\ent) \\ (esEvolucionMultiple(t1,tm,n) \land (\forall m:\ent)(esEvolucionMultiple(t2,tm,m) ) \implica n\leq m)))\\
+    (\exists tm:\toroide)( esValido(tm) \land_L toroideMuerto(tm) \land  (\exists n:\ent) \\ (esToroideEvolucionK(n, t1, tm) \land (\forall m:\ent)(esToroideEvolucionK(m, t2, tm) ) \implica n \leq m)))\\
 }
 
 \section{Ejercicio 12}
 
 \begin{proc}{fusionar}{in t1: \toroide, in t2: \toroide, out res: \toroide}{}
-    \pre{(esValido(t1) \land esValido(t2)) \yLuego dim(t1) = dim(t2)}
-    \post{esValido(res) \yLuego ( dim(res) = dim(t1) \yLuego \\
+    \pre{(esValido(t1) \land esValido(t2)) \yLuego dim(t1, t2)}
+    \post{esValido(res) \yLuego ( dim(res, t1) \yLuego \\
     (\forall i, j : \ent)((0 \leq i < \longitud{t1}) \land (0 \leq j < \longitud{t1[0]}) \implicaLuego \\
     (res[i][j] = \True \Iff (t1[i][j] = \True \land t2[i][j] = \True) \ ) \ ) \\
     }
@@ -199,7 +201,7 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 \subsection{Procedimiento}
 
 \begin{proc}{vistaTrasladada}{\In t1 : toroide, \In t2 : toroide, \Out res : \bool}{}
-    \pre{esValido(t1) \land esValido(t2) \land mismoTablero(t1, t2)}
+    \pre{esValido(t1) \land esValido(t2) \land dim(t1, t2)}
     \post{res = \True \leftrightarrow esTraslacion(t1, t2)}
 \end{proc}
 
@@ -211,23 +213,22 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
 
 \section{Ejercicio 14}
 
+\subsection{Procedimiento}
 \begin{proc}{menorSuperficieViva}{\In t : \toroide, \Out res : \ent}{}
     \pre{esValido(t)}
     \post{   esMenorSuperficie(t,res)}
     
 \end{proc}
 
-\pred{esMenorSuperficie}{t : \toroide, res : \ent}{ \\ 0 \leq res \leq |t|*|t[0]| \land_L   \land  esMenorATodas(t, res) \land  existeEsaSuperficie(t, res)
-}
-
-\pred{esMenorATodas}{t: \toroide , res : \ent}{ \\ (\forall largo, alto : \ent) ( \ ( \forall i,j : \ent) \ ( \ ( 0 \leq i,alto < |t| \land_L 0 \leq j,largo < |t[i]| ) \\ \Rightarrow_L \ ( \  ( esSuperficieValida(i,j,alto,largo,t) \Rightarrow (alto+1) * (largo+1) \geq res ) \ ) \ ) \ ) }
-
-\pred{existeEsaSuperficie}{t : \toroide , res : \ent}{ \\ ( \exists largo_2, alto_2 : \ent) \ ( \exists i,j : \ent) \ ( \ ( 0 \leq i,alto_2 < |t| \land_L 0 \leq j,largo_2 < |t[i]| ) \\ \land_L \ ( \  ( esSuperficieValida(i,j,alto_2,largo_2,t) \Rightarrow (alto_2 +1) * (largo_2+1) = res )) } 
-
 \subsection{Predicados auxiliares}
+\pred{esMenorSuperficie}{t : \toroide, res : \ent}{ \\ 0 \leq res \leq |t|*|t[0]| \land_L   \land  esMenorATodas(t, res) \land  existeEsaSuperficie(t, res)
+\\}
 
+\pred{esMenorATodas}{t: \toroide , res : \ent}{ \\ (\forall largo, alto : \ent) ( \ ( \forall i,j : \ent) \ ( \ ( 0 \leq i,alto < |t| \land_L 0 \leq j,largo < |t[i]| ) \\ \Rightarrow_L \ ( \  ( esSuperficieValida(i,j,alto,largo,t) \Rightarrow (alto+1) * (largo+1) \geq res ) \ ) \ ) \ ) \\}
 
-\pred{esSuperficieValida}{i,j : \ent , alto.largo : \ent , t : \toroide}{\\ ( \sum_{fi=i}^{i+alto} \sum_{co=j}^{j+largo} \IfThenElse{t[fi \bmod |t|][co \bmod |t[0]|] = true}{1}{0}  ) = cantidadVivos(t)}
+\pred{existeEsaSuperficie}{t : \toroide , res : \ent}{ \\ ( \exists largo_2, alto_2 : \ent) \ ( \exists i,j : \ent) \ ( \ ( 0 \leq i,alto_2 < |t| \land_L 0 \leq j,largo_2 < |t[i]| ) \\ \land_L \ ( \  ( esSuperficieValida(i,j,alto_2,largo_2,t) \Rightarrow (alto_2 +1) * (largo_2+1) = res )) \\} 
+
+\pred{esSuperficieValida}{i,j : \ent , alto.largo : \ent , t : \toroide}{\\ ( \sum_{fi=i}^{i+alto} \sum_{co=j}^{j+largo} \IfThenElse{t[fi \bmod |t|][co \bmod |t[0]|] = true}{1}{0}  ) = cantidadVivos(t) \\}
 
 
 \section{Ejercicio 15}
@@ -244,4 +245,15 @@ evolucionDePosicion(t1, (i,j))\Iff t2[i][j] = \True\\
     (\exists k, m : \ent)((0 < k < m) \land_L (esMenorSuperficie(t, k) \land esMenorSuperficie(t2, m))))
     \\}
 
+\section{Decisiones tomadas}
+En cada ejercicio de la primera parte asumimos que el usuario debe cumplir con el contrato pasando un toroide válido, para simplificar la escritura.
+    En general, en los predicados asumimos que los parámetros pasados son válidos cuando posible, y la validez de los parámetros pasados es verificada en los procedimientos.\\ 
+\indent En el ejercicio 9, tomamos la decisión de que en caso de que el resultado sea falso, el parámetro p debe tener el mismo valor que se le pasó originalmente. \\
+\indent En el ejercicio 10, decidimos que un toroide debe evolucionar una cantidad positiva de ticks. O sea, dado un toroide t, el mismo toroide t 
+es primo de t únicamente si t es periódico. \\
+\indent En el ejercicio 13, decidimos que la traslación (0, 0), que es igual a la traslación
+($|t|$, $|t[0]$) es una traslación válida. 
+También, nuestro procedimiento es indiferente a cuál traslación se está evaluando, siempre y cuando sea una traslación válida. 
+Asumimos que, por ejemplo, una traslación de (-4, -3) es válida.\\
+\indent Además de eso no tomamos ninguna decisión muy relevante al momento de resolver los ejercicios, más que interpretar los enunciados y a partir de eso escribir las especificaciones que pensamos adecuadas.
 \end{document}
